@@ -1,0 +1,10 @@
+<?php
+
+namespace App\Services\Interfaces;
+
+use Illuminate\Http\UploadedFile;
+
+interface UtilisateurServiceInterface
+{
+    public function createUtilisateur(array $data, UploadedFile $photo = null);
+}
