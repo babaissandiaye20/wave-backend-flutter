@@ -5,7 +5,12 @@
       "description": "API pour gérer les utilisateurs, l'authentification et les transactions.",
       "version": "1.0.0"
     },
-   
+    "servers": [
+      {
+        "url": "https://wave-backend-flutter.onrender.com/api",
+        "description": "Serveur local"
+      }
+    ],
     "paths": {
       "/login": {
         "post": {
