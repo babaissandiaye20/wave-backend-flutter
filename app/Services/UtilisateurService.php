@@ -71,4 +71,16 @@ class UtilisateurService implements UtilisateurServiceInterface
         }
     }
     
+    public function setUtilisateurAsPlanned(int $id)
+    {
+        $utilisateur = $this->utilisateurRepository->findById($id);
+
+        if (!$utilisateur) {
+            throw new Exception("Utilisateur non trouvé.");
+        }
+
+        $utilisateur->markAsPlanned();
+
+        return $utilisateur;
+    }
 }

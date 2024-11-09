@@ -24,7 +24,7 @@ class UtilisateurController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $request->merge(['nom' => $request->input('nom_')]);
+        $request->merge(['nom' => $request->input('nom') ?? $request->input('nom_')]);
 
         $this->validate($request, [
             'prenom' => 'required|string|max:255',
@@ -51,6 +51,23 @@ class UtilisateurController extends Controller
                 'success' => false,
                 'message' => $e->getMessage(),
             ], 500);
+        }
+    }
+    public function markAsPlanned(int $id): JsonResponse
+    {
+        try {
+            $utilisateur = $this->utilisateurService->setUtilisateurAsPlanned($id);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Utilisateur marqué comme planifié.',
+                'data' => $utilisateur,
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 404);
         }
     }
 }

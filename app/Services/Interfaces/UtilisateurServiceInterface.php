@@ -7,4 +7,5 @@ use Illuminate\Http\UploadedFile;
 interface UtilisateurServiceInterface
 {
     public function createUtilisateur(array $data, UploadedFile $photo = null);
+    public function setUtilisateurAsPlanned(int $id);
 }

@@ -9,7 +9,8 @@ class TypeTransaction extends Model
 {
     use HasFactory;
 
-    protected $table = 'type_transactions';
+    protected $table = 'types_transactions';
+
 
     protected $fillable = [
         'nom',

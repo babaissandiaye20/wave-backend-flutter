@@ -1,0 +1,596 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "API Utilisateurs et Transactions",
+      "description": "API pour gérer les utilisateurs, l'authentification et les transactions.",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:8000/api",
+        "description": "Serveur local"
+      }
+    ],
+    "paths": {
+      "/login": {
+        "post": {
+          "summary": "Authentifier un utilisateur",
+          "tags": ["Authentification"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "login": {
+                      "type": "string",
+                      "example": "jdupont"
+                    },
+                    "codesecret": {
+                      "type": "string",
+                      "example": "secret123"
+                    }
+                  },
+                  "required": ["login", "codesecret"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Authentification réussie",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "token": {
+                        "type": "string",
+                        "example": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+                      },
+                      "user": {
+                        "$ref": "#/components/schemas/Utilisateur"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Login ou code secret incorrect"
+            }
+          }
+        }
+      },
+      "/transactions": {
+        "post": {
+          "summary": "Effectuer une transaction",
+          "tags": ["Transactions"],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionRequest"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Transaction effectuée avec succès",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "transaction": {
+                        "$ref": "#/components/schemas/Transaction"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Erreur lors de la transaction",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "error": {
+                        "type": "string",
+                        "example": "Erreur lors de la transaction: Solde insuffisant"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "get": {
+          "summary": "Obtenir toutes les transactions",
+          "tags": ["Transactions"],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Liste des transactions",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "transactions": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/Transaction"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Erreur serveur",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/transactions/{id}": {
+        "get": {
+          "summary": "Obtenir une transaction par ID",
+          "tags": ["Transactions"],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Transaction trouvée",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "transaction": {
+                        "$ref": "#/components/schemas/Transaction"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Transaction non trouvée",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "put": {
+          "summary": "Mettre à jour une transaction",
+          "tags": ["Transactions"],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionRequest"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Transaction mise à jour",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "transaction": {
+                        "$ref": "#/components/schemas/Transaction"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Transaction non trouvée",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "summary": "Supprimer une transaction",
+          "tags": ["Transactions"],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Transaction supprimée",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Transaction supprimée avec succès."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Transaction non trouvée",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/transactions/planifier": {
+        "post": {
+          "summary": "Planifier une transaction",
+          "tags": ["Transactions"],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionPlanifieeRequest"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Transaction planifiée avec succès",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "transactionPlanifiee": {
+                        "$ref": "#/components/schemas/TransactionPlanifiee"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Erreur lors de la planification",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      },
+      "schemas": {
+        "Error": {
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "example": false
+            },
+            "error": {
+              "type": "string",
+              "example": "Message d'erreur"
+            }
+          }
+        },
+        "Utilisateur": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "prenom": {
+              "type": "string",
+              "example": "Jean"
+            },
+            "nom": {
+              "type": "string",
+              "example": "Dupont"
+            },
+            "login": {
+              "type": "string",
+              "example": "jdupont"
+            },
+            "role": {
+              "type": "string",
+              "enum": ["client", "agent", "admin"],
+              "example": "client"
+            },
+            "photo": {
+              "type": "string",
+              "example": "photo.jpg"
+            },
+            "planifiee": {
+              "type": "boolean",
+              "example": false
+            }
+          }
+        },
+        "UtilisateurRequest": {
+          "type": "object",
+          "properties": {
+            "prenom": {
+              "type": "string",
+              "example": "Jean"
+            },
+            "nom": {
+              "type": "string",
+              "example": "Dupont"
+            },
+            "login": {
+              "type": "string",
+              "example": "jdupont"
+            },
+            "codesecret": {
+              "type": "string",
+              "example": "secret123"
+            },
+            "role": {
+              "type": "string",
+              "enum": ["client", "agent", "admin"],
+              "example": "client"
+            },
+            "photo": {
+              "type": "string",
+              "format": "binary",
+              "description": "Photo de profil"
+            }
+          },
+          "required": ["prenom", "nom", "login", "codesecret"]
+        },
+        "Transaction": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "compte_id": {
+              "type": "integer",
+              "example": 1
+            },
+            "type_transaction_id": {
+              "type": "integer",
+              "example": 1
+            },
+            "montant": {
+              "type": "number",
+              "format": "float",
+              "example": 1000.00
+            },
+            "montant_debite": {
+              "type": "number",
+              "format": "float",
+              "example": 1010.00
+            },
+            "montant_credite": {
+              "type": "number",
+              "format": "float",
+              "example": 1000.00
+            },
+            "frais": {
+              "type": "boolean",
+              "example": true
+            },
+            "montant_frais": {
+              "type": "number",
+              "format": "float",
+              "example": 10.00
+            },
+            "frais_paye_par": {
+              "type": "string",
+              "enum": ["emetteur", "destinataire"],
+              "example": "emetteur"
+            },
+            "receiver_id": {
+              "type": "integer",
+              "example": 2
+            }
+          }
+        },
+        "TransactionRequest": {
+          "type": "object",
+          "properties": {
+            "type_transaction_id": {
+              "type": "integer",
+              "example": 1
+            },
+            "montant": {
+              "type": "number",
+              "format": "float",
+              "example": 1000.00
+            },
+            "sender_id": {
+              "type": "integer",
+              "example": 1
+            },
+            "receivers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "receiver_id": {
+                    "type": "integer",
+                    "example": 2
+                  }
+                }
+              }
+            },
+            "frais": {
+              "type": "boolean",
+              "example": true
+            }
+          },
+          "required": ["type_transaction_id", "montant", "sender_id", "receivers"]
+        },
+        "TransactionPlanifiee": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "compte_id": {
+              "type": "integer",
+              "example": 1
+            },
+            "compte_destinataire_id": {
+              "type": "integer",
+              "example": 2
+            },
+            "type_transaction_id": {
+              "type": "integer",
+              "example": 1
+            },
+            "montant": {
+              "type": "number",
+              "format": "float",
+              "example": 1000.00
+            },
+            "montant_debite": {
+              "type": "number",
+              "format": "float"
+            }
+        }
+    }
+}
+    }
+}

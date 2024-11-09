@@ -17,7 +17,8 @@ class Utilisateur extends Model
         'login',
         'codesecret',
         'role',
-        'photo'
+        'photo',
+        'planifiée',
     ];
 
     // Masquer les colonnes created_at et updated_at
@@ -32,5 +33,10 @@ class Utilisateur extends Model
     public function comptes()
     {
         return $this->hasMany(Compte::class);
+    }
+    public function markAsPlanned()
+    {
+        $this->planifiée = true;
+        return $this->save();
     }
 }
