@@ -21,21 +21,33 @@ Route::put('/types-transactions/{id}', [TypeTransactionController::class, 'updat
 Route::delete('/types-transactions/{id}', [TypeTransactionController::class, 'destroy']);
 
 /* Route::post('/effectuer', [TransactionController::class, 'effectuerTransaction']); */
-Route::post('/transactions', [TransactionController::class, 'effectuerTransaction']);
 
-Route::prefix('transactions')->group(function () {
+/* Route::prefix('transactions')->group(function () {
  
     Route::get('/', [TransactionController::class, 'obtenirToutesTransactions']);
     Route::get('/{id}', [TransactionController::class, 'obtenirTransactionParId']);
     Route::put('/{id}', [TransactionController::class, 'mettreAJourTransaction']);
     Route::delete('/{id}', [TransactionController::class, 'supprimerTransaction']);
-});
+}); */
 
 Route::put('/utilisateurs/{id}/planifier', [UtilisateurController::class, 'markAsPlanned']);
-Route::post('/transactions/planifier', [TransactionController::class, 'planifierTransaction']);
+/* Route::post('/transactions/planifier', [TransactionController::class, 'planifierTransaction']); */
 
-Route::middleware('auth:api')->group(function () {
-  
+Route::middleware('auth:api')->get('/utilisateurs', [UtilisateurController::class, 'index']);
+Route::middleware('auth:api')->post('/transactions', [TransactionController::class, 'effectuerTransaction']); 
+Route::middleware('auth:api')->post('/transactions/planifier', [TransactionController::class, 'planifierTransaction']);
 
+
+Route::post('verify-accounts', [UtilisateurController::class, 'checkIfPhoneExists']);
+
+
+Route::middleware('auth:api')->get('/compte-info', [UtilisateurController::class, 'getCompteInfo']);
+
+/* Route::post('/transactions',[TransactionController::class, 'effectuerTransaction']); */
     
+Route::middleware('auth:api')->get('/verify-token', function () {
+    return response()->json(['valid' => true]);
+});
+Route::middleware('auth:api')->group(function () {
+    Route::get('/transactions/utilisateur', [TransactionController::class, 'afficherTransactions']);
 });

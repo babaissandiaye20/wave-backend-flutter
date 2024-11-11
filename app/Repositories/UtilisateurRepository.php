@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Compte;
 use App\Models\Utilisateur;
 use App\Repositories\Interfaces\UtilisateurRepositoryInterface;
 
@@ -36,4 +37,18 @@ class UtilisateurRepository implements UtilisateurRepositoryInterface
     {
         return Utilisateur::destroy($id);
     }
+    public function getAllExcept(int $utilisateurId)
+{
+    return Utilisateur::where('id', '!=', $utilisateurId)->get();
+}
+public function findExistingPhones(array $telephones): array
+{
+    return Utilisateur::whereIn('telephone', $telephones)->pluck('telephone')->toArray();
+}
+public function getCompteByUtilisateurId(int $utilisateurId)
+{
+    return Compte::where('utilisateur_id', $utilisateurId)->first();
+}
+
+
 }

@@ -15,12 +15,14 @@ class AuthController extends Controller
             'codesecret' => 'required|string',
         ]);
 
-        // Trouver l'utilisateur par login
-        $utilisateur = Utilisateur::where('login', $request->login)->first();
+        // Rechercher l'utilisateur soit par login soit par téléphone
+        $utilisateur = Utilisateur::where('login', $request->login)
+                                  ->orWhere('telephone', $request->login)
+                                  ->first();
 
         // Vérifier si le code secret est correct
         if ($utilisateur && Hash::check($request->codesecret, $utilisateur->codesecret)) {
-            // Créer un token avec Passport
+            // Créer un token d'accès
             $token = $utilisateur->createToken('AccessToken')->accessToken;
 
             return response()->json([
@@ -32,7 +34,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => false,
-            'message' => 'Login ou code secret incorrect',
+            'message' => 'Login, téléphone ou code secret incorrect',
         ], 401);
     }
 }

@@ -83,4 +83,14 @@ class UtilisateurService implements UtilisateurServiceInterface
 
         return $utilisateur;
     }
+    public function getAllUtilisateursExcept(int $utilisateurId)
+{
+    return $this->utilisateurRepository->getAllExcept($utilisateurId);
+}
+public function checkPhoneNumbers(array $telephones): array
+{
+    return $this->utilisateurRepository->findExistingPhones($telephones);
+}
+
+
 }

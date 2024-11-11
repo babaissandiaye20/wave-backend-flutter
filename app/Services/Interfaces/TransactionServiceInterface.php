@@ -10,4 +10,5 @@ interface TransactionServiceInterface
     public function mettreAJourTransaction(int $id, array $data);
     public function supprimerTransaction(int $id);
     public function planifierTransfert(array $data);
+    
 }

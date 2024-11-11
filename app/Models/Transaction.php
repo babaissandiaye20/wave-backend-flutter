@@ -28,9 +28,16 @@ class Transaction extends Model
         return $this->belongsTo(Compte::class);
     }
 
-    /**
-     * Relation avec le modèle TypeTransaction
-     */
+    public function senderCompte()
+    {
+        return $this->belongsTo(Compte::class, 'compte_id');
+    }
+
+    public function receiverCompte()
+    {
+        return $this->belongsTo(Compte::class, 'compte_destinataire_id');
+    }
+
     public function typeTransaction()
     {
         return $this->belongsTo(TypeTransaction::class, 'type_transaction_id');

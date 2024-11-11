@@ -20,7 +20,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY . .
 
 # Créer le fichier .env à partir de .env.example si nécessaire
-RUN cp .env.example .env
+COPY .env .env
 
 # Installer les dépendances
 RUN composer install --optimize-autoloader --no-dev

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Transaction;
+use Illuminate\Support\Facades\DB;
 use App\Repositories\Interfaces\TransactionRepositoryInterface;
 
 class TransactionRepository implements TransactionRepositoryInterface
@@ -36,4 +37,5 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
         return Transaction::destroy($id);
     }
+   
 }
