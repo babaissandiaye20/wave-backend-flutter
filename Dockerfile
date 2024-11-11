@@ -13,14 +13,15 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo pdo_pgsql
    
 RUN php -m | grep pdo_pgsql
+
 # Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copier tous les fichiers du projet dans le conteneur
+# Copier tous les fichiers du projet dans le conteneur, incluant .env
 COPY . .
 
-# Créer le fichier .env à partir de .env.example si nécessaire
-COPY .env .env
+# Confirmer la présence du fichier .env
+RUN ls -la .env && cat .env
 
 # Installer les dépendances
 RUN composer install --optimize-autoloader --no-dev
