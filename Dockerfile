@@ -11,7 +11,8 @@ RUN apt-get update && apt-get install -y \
     git \
     libpq-dev \
     && docker-php-ext-install pdo pdo_pgsql
-   
+
+# Vérifier que l'extension pdo_pgsql est installée
 RUN php -m | grep pdo_pgsql
 
 # Installer Composer
@@ -26,8 +27,10 @@ RUN ls -la .env && cat .env
 # Installer les dépendances
 RUN composer install --optimize-autoloader --no-dev
 
-# Donner les permissions nécessaires
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Configurer les permissions nécessaires pour Laravel
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache
 
 # Générer la clé de l'application
 RUN php artisan key:generate
