@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nom');
             $table->string('login')->unique();
             $table->string('codesecret');
-            $table->enum('role', ['client', 'agent', 'admin'])->default('client');
+            $table->enum('role', ['client', 'agent', 'marchand','admin'])->default('client');
             $table->string('photo')->nullable(); // Ajout de la colonne photo
             $table->timestamps();
         });

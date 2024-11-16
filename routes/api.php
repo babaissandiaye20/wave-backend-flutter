@@ -48,6 +48,8 @@ Route::middleware('auth:api')->get('/compte-info', [UtilisateurController::class
 Route::middleware('auth:api')->get('/verify-token', function () {
     return response()->json(['valid' => true]);
 });
+
+
 Route::middleware('auth:api')->group(function () {
-    Route::get('/transactions/utilisateur', [TransactionController::class, 'afficherTransactions']);
+    Route::get('/transactions', [TransactionController::class, 'obtenirToutesTransactions']);
 });

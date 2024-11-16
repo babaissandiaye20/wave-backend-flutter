@@ -30,19 +30,26 @@ class TransactionController extends Controller
         }
     }
 
-    /**
-     * Obtenir toutes les transactions.
-     */
-    public function obtenirToutesTransactions()
-    {
-        try {
-            $transactions = $this->transactionService->obtenirToutesTransactions();
-            return response()->json(['success' => true, 'transactions' => $transactions], 200);
-        } catch (Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
-        }
+ /**
+ * Obtenir toutes les transactions.
+ * 
+ * @return \Illuminate\Http\JsonResponse
+ */
+public function obtenirToutesTransactions()
+{
+    try {
+        $transactions = $this->transactionService->obtenirToutesTransactions();
+        return response()->json([
+            'success' => true, 
+            'transactions' => $transactions
+        ], 200);
+    } catch (Exception $e) {
+        return response()->json([
+            'success' => false, 
+            'error' => $e->getMessage()
+        ], 500);
     }
-
+}
     /**
      * Obtenir une transaction par ID.
      */

@@ -45,6 +45,11 @@ class UtilisateurService implements UtilisateurServiceInterface
     public function createUtilisateur(array $data, UploadedFile $photo = null)
     {
         try {
+            if (isset($data['role'])) {
+                if (!in_array($data['role'], ['client', 'agent', 'marchand', 'admin'])) {
+                    throw new Exception('Rôle invalide');
+                }
+            }
             $data['codesecret'] = Hash::make($data['codesecret']);
     
             if ($photo) {

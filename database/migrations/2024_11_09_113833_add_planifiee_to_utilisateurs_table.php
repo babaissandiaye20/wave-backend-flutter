@@ -19,6 +19,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
+
     public function down()
     {
         Schema::table('utilisateurs', function (Blueprint $table) {

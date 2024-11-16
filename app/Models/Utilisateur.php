@@ -43,4 +43,23 @@ class Utilisateur extends Authenticatable
         $this->planifiée = true;
         return $this->save();
     }
+    const ROLE_CLIENT = 'client';
+    const ROLE_AGENT = 'agent';
+    const ROLE_MARCHAND = 'marchand';
+    const ROLE_ADMIN = 'admin';
+
+    protected $attributes = [
+        'role' => self::ROLE_CLIENT
+    ];
+
+    // Ajoutez cette méthode pour valider les rôles
+    public static function roles(): array
+    {
+        return [
+            self::ROLE_CLIENT,
+            self::ROLE_AGENT, 
+            self::ROLE_MARCHAND,
+            self::ROLE_ADMIN
+        ];
+    }
 }

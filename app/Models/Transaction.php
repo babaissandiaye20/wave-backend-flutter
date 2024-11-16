@@ -11,8 +11,11 @@ class Transaction extends Model
 
     protected $fillable = [
         'compte_id',
+        'receiver_id',
         'type_transaction_id',
         'montant',
+        'compte_destinataire_id',    
+
     ];
     protected $hidden = [
         'created_at',
@@ -42,4 +45,10 @@ class Transaction extends Model
     {
         return $this->belongsTo(TypeTransaction::class, 'type_transaction_id');
     }
+    public function compteDestinataire()
+{
+    return $this->belongsTo(Compte::class, 'compte_destinataire_id');
+}
+    
+    
 }

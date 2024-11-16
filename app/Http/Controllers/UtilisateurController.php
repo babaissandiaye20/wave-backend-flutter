@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\Utilisateur;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use App\Repositories\Interfaces\UtilisateurRepositoryInterface;
 use App\Services\Interfaces\UtilisateurServiceInterface;
+use App\Repositories\Interfaces\UtilisateurRepositoryInterface;
 
 class UtilisateurController extends Controller
 {
@@ -45,7 +47,7 @@ class UtilisateurController extends Controller
         'nom' => 'required|string|max:255',
         'login' => 'required|string|unique:utilisateurs,login|max:255',
         'codesecret' => 'required|string|min:6',
-        'role' => 'nullable|in:client,agent,admin',
+        'role' => ['required', 'string', Rule::in(Utilisateur::roles())],
         'photo' => 'nullable|image|max:2048',
         'telephone' => 'required|string|unique:utilisateurs,telephone|regex:/^[0-9]{9}$/', // Format sénégalais
     ]);

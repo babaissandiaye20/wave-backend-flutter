@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use Illuminate\Support\Facades\Log;
+use App\Models\TransactionPlanifiee;
 use App\Services\TransactionService;
 use App\Jobs\ExecuteScheduledTransfers;
 use Illuminate\Console\Scheduling\Schedule;
@@ -11,15 +13,18 @@ class Kernel extends ConsoleKernel
 {
     /**
      * Define the application's command schedule.
-     */
-    protected function schedule(Schedule $schedule): void
-    {
-        $schedule->call(function () {
+     */protected function schedule(Schedule $schedule): void
+{
+    $schedule->call(function () {
+        // Vérifier s'il existe des transactions planifiées actives
+        if (TransactionPlanifiee::where('active', true)->exists()) {
             $transactionService = app(TransactionService::class);
             dispatch(new ExecuteScheduledTransfers($transactionService));
-        })->everyMinute();
-        // $schedule->command('inspire')->hourly();
-    }
+        } else {
+            Log::info('Aucune transaction planifiée active. Schedule arrêté.');
+        }
+    })->everyMinute();
+}
 
     /**
      * Register the commands for the application.
